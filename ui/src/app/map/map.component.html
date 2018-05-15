@@ -1,0 +1,60 @@
+<div class="container">
+
+	<div class="form-group row">
+		<label for="vehicle-input" class="col-1 col-form-label">Vehicle:</label>
+
+		<div ngbDropdown class="col-6 d-inline-block">
+			<button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{ selectedVehicle != null ? selectedVehicle.brand + " | " + selectedVehicle.model + " | " + selectedVehicle.licensePlate : "Select"}}</button>
+			<div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+				<button type="button" class="dropdown-item" *ngFor="let vehicle of vehicles" (click)="onChangeVehicle(vehicle)">{{vehicle.brand + " | " + vehicle.model + " | " + vehicle.licensePlate }}</button>
+			</div>
+		</div>
+		
+		<label class="col-2 col-form-label">Fuel Cost (€/L):</label>
+		<input type="number" step="0.01" class="form-control col-1" name="fuelCost" [(ngModel)]="fuelCost">
+	</div>
+	<div class="row">
+		<label class="col-1 col-form-label">Origin:</label>
+		<label class="col-3 col-form-label">{{ originCoord }}</label>
+		
+		<label class="col-1 col-form-label">Destination:</label>
+		<label class="col-3 col-form-label">{{ destinationCoord }}</label>
+	</div>
+	
+	<div class="row">
+		<label class="col-2 col-form-label">Distance (km):</label>
+		<label class="col-2 col-form-label">{{ distance.value * 0.001 | number }}</label>
+		
+		<label class="col-1 col-form-label">Duration:</label>
+		<label class="col-2 col-form-label">{{ duration.text }}</label>
+		
+		<label class="col-2 col-form-label">Total Cost (€):</label>
+		<label class="col-1 col-form-label">{{ calculateFuelTotalCost() | number }}</label>
+	</div>
+	
+	<br>
+	
+	<div class="row">
+		<div class="col-md-7 col-sm-12 col-xs-12">
+			<form class="form-inline" #form="ngForm">
+				<div class="form-group">
+					<input type="text" class="form-control" name="origin" [(ngModel)]="origin" placeholder="Origin" required>
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control" name="destination" [(ngModel)]="destination" placeholder="Destination" required>
+				</div>
+				<button type="submit" class="btn btn-primary" [disabled]="form.invalid" (click)="getDirections()">Get directions</button>
+			</form>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="text-center">
+				<h3>
+					<div #gmap style="width: 100%; height: 400px"></div>
+				</h3>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,3 @@
+INSERT INTO VEHICLE 
+VALUES(vehicle_seq.nextval, CURRENT_TIMESTAMP(), '7ae4a8f0-34df-4ba4-9067-fb11b839f3f6', CURRENT_TIMESTAMP(), 1, 'BMW', 5, '93-QZ-24', '116d')
+;

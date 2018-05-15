@@ -1,0 +1,70 @@
+<div class="container">
+
+	<div class="vehicles">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>License Plate</th>
+					<th>Brand</th>
+					<th>Model</th>
+					<th>Fuel Consumption (L/100)</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let vehicle of vehicles; let i = index">
+					<th scope="row">{{ i + 1 }}</th>
+					<td>{{ vehicle.licensePlate }}</td>
+					<td>{{ vehicle.brand }}</td>
+					<td>{{ vehicle.model }}</td>
+					<td>{{ vehicle.fuelConsumption }}</td>
+					<td>
+						<button type="button" class="btn btn-info" (click)="onEdit(vehicle, i)">Edit</button>
+					</td>
+					<td>
+						<button type="button" class="btn btn-danger" (click)="onDelete(vehicle, i)">Delete</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="text-right">
+			<button type="submit" class="btn btn-primary" (click)="onNew()">New</button>
+		</div>
+	</div>
+		
+	<br>
+	
+	<form name="myForm" novalidate>
+		<div class="form-group row">
+			<label for="licensePlate" class="col-2 col-form-label">License Plate</label>
+			<div class="col-4">
+				<input class="form-control" type="text" [(ngModel)]="vehicleModel.licensePlate" name="licensePlate">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="brand" class="col-2 col-form-label">Brand</label>
+			<div class="col-4">
+				<input class="form-control" type="text" [(ngModel)]="vehicleModel.brand" name="brand">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="model" class="col-2 col-form-label">Model</label>
+			<div class="col-4">
+				<input class="form-control" type="text" [(ngModel)]="vehicleModel.model" name="model">
+			</div>
+		</div>
+		<div class="form-group row">
+			<label for="fuelConsumption" class="col-2 col-form-label">Fuel Consumption (L/100)</label>
+			<div class="col-2">
+				<input class="form-control" type="number" [(ngModel)]="vehicleModel.fuelConsumption" placeholder="0.00" step="0.01" name="fuelConsumption">
+			</div>
+		</div>
+		
+		<button type="submit" class="btn btn-success" *ngIf="showNew" (click)="onSave()">Save</button>
+		<button type="submit" class="btn btn-success" *ngIf="!showNew" (click)="onUpdate()">Update</button>
+	</form>
+	
+	
+</div>

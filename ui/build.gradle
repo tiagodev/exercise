@@ -1,0 +1,28 @@
+apply plugin: 'eclipse'
+apply plugin: 'com.moowork.node'
+
+// NODE/NPM CONFIGURATION
+node {
+	version = "${nodeVersion}"
+	npmVersion = "${npmVersion}"
+	download = true
+	workDir = file("${project.buildDir}/node")
+	nodeModulesDir = file("${project.projectDir}")
+}
+
+// Tasks NPM
+task clean(type: Delete) {
+    group 'build client'
+    delete "${project.buildDir}/dist"
+}
+
+task cleanNpm(type: Delete) {
+    group 'build client'
+    dependsOn 'clean'
+    delete "${project.buildDir}/node", "${project.buildDir}/node_modules"
+}
+
+task npmUpdate {
+    group 'build client'
+    dependsOn 'npm_update'
+}

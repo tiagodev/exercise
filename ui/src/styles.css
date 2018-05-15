@@ -1,0 +1,24 @@
+@import '~bootstrap/dist/css/bootstrap.min.css';
+
+body {
+	padding-top: 80px;
+}
+
+/* GOOGLE MAPS */
+#map {
+	height: 100%;
+}
+
+#floating-panel {
+  	position: absolute;
+  	top: 10px;
+  	left: 25%;
+  	z-index: 5;
+  	background-color: #fff;
+  	padding: 5px;
+  	border: 1px solid #999;
+  	text-align: center;
+  	font-family: 'Roboto','sans-serif';
+  	line-height: 30px;
+  	padding-left: 10px;
+}

@@ -1,0 +1,97 @@
+apply plugin: 'java' 
+apply plugin: 'war'
+apply plugin: 'eclipse'
+apply plugin: 'com.webcohesion.enunciate'
+apply plugin: 'com.bmuschko.cargo'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+
+sourceCompatibility = 1.8
+
+dependencies {
+
+	// SPRING FRAMEWORK
+	compile group: 'org.springframework', name: 'spring-webmvc', version: "${springwebmvcVersion}"
+	compile group: 'org.springframework', name: 'spring-orm', version: "${springOrmVersion}"
+	testCompile group: 'org.springframework', name: 'spring-test', version: "${springTestVersion}"
+	
+	// TEST FRAMEWORKS
+	testCompile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: "${seleniumJavaVersion}"
+	testCompile group: 'junit', name: 'junit', version: "${junitVersion}"
+	testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: "${hamcrestVersion}"
+	testCompile group: 'org.mockito', name: 'mockito-all', version: "${mockitoVersion}"
+	testCompile group: 'info.cukes', name: 'cucumber-junit', version: "${cucumberJunitVersion}"
+	testCompile group: 'info.cukes', name: 'cucumber-java', version: "${cucumberJavaVersion}"
+	
+	// API DOCUMENTATION
+	compile group: 'com.webcohesion.enunciate', name: 'enunciate-spring-web', version: "${enunciateVersion}"
+	
+	// PERSISTENCE
+	compile group: 'org.hibernate', name: 'hibernate-core', version: "${hibernateCoreVersion}"
+	providedCompile group: 'com.h2database', name: 'h2', version: "${h2DriverVersion}"
+	
+	// OTHER
+	providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: "${servletApiVersion}"
+	compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: "${log4jVersion}"
+	compile group: 'org.apache.tomcat', name: 'tomcat-dbcp', version: "${tomcatDbcpVersion}"
+	compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: "${jacksonDatabindVersion}"
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: "${apacheCommonsVersion}"
+	compile group: 'commons-collections', name: 'commons-collections', version: "${apacheCommonsCollectionsVersion}"
+	
+}
+
+// DEPLOY TASK
+cargo {
+    containerId = 'tomcat9x'
+    port = 8080
+
+    remote {
+        hostname = "${server}"
+        username = 'admin'
+        password = 'admin'
+    }
+}
+
+// DOCUMENTATION TASK
+tasks.enunciate {
+  File enunciateDistDir = file("dist/docs/api")
+  configFileName = "src/main/resources/enunciate.xml"
+  
+  doFirst {
+    enunciateDistDir.deleteDir()
+    enunciateDistDir.mkdirs()
+  }
+  export("docs", enunciateDistDir)
+}
+
+build.finalizedBy(enunciate)
+
+// STATIC ANALYSIS
+findbugs {
+  ignoreFailures = true
+  sourceSets = [sourceSets.main]
+  reportsDir = file("$project.buildDir/reports/findbugs")
+  effort = "max"
+}
+
+pmd {
+  ignoreFailures = true
+  sourceSets = [sourceSets.main]
+  reportsDir = file("$project.buildDir/reports/pmd")
+  ruleSets = ["java-basic", "java-braces", "java-unusedcode", "java-unnecessary"]
+}
+
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+tasks.withType(Pmd){
+    reports{
+        xml.enabled=true
+        html.enabled=true
+    }
+}
+
